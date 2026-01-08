@@ -9,29 +9,28 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
-    private Context context;
-    private Cursor cursor;
+public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.Holder> {
 
-    public NoteAdapter(Context context, Cursor cursor) {
-        this.context = context;
-        this.cursor = cursor;
+    Context context;
+    Cursor cursor;
+
+    public NoteAdapter(Context c, Cursor cur) {
+        context = c;
+        cursor = cur;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.note_item, parent, false);
-        return new ViewHolder(view);
+    public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(context)
+                .inflate(R.layout.note_item, parent, false);
+        return new Holder(v);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        if(cursor.moveToPosition(position)) {
-            String title = cursor.getString(cursor.getColumnIndexOrThrow("title"));
-            String content = cursor.getString(cursor.getColumnIndexOrThrow("content"));
-            holder.txtTitle.setText(title);
-            holder.txtContent.setText(content);
-        }
+    public void onBindViewHolder(Holder h, int pos) {
+        cursor.moveToPosition(pos);
+        h.title.setText(cursor.getString(1));
+        h.content.setText(cursor.getString(2));
     }
 
     @Override
@@ -39,12 +38,12 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         return cursor.getCount();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txtTitle, txtContent;
-        public ViewHolder(View itemView) {
-            super(itemView);
-            txtTitle = itemView.findViewById(R.id.txtTitle);
-            txtContent = itemView.findViewById(R.id.txtContent);
+    static class Holder extends RecyclerView.ViewHolder {
+        TextView title, content;
+        Holder(View v) {
+            super(v);
+            title = v.findViewById(R.id.txtTitle);
+            content = v.findViewById(R.id.txtContent);
         }
     }
 }
